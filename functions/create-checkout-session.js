@@ -32,10 +32,13 @@ exports.handler = async (event) => {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: 'https://your-site.netlify.app/success',
-      cancel_url: 'https://your-site.netlify.app/',
+      success_url: 'https://autocontentengine.netlify.app/success.html',
+      cancel_url: 'https://autocontentengine.netlify.app/',
       customer_email: email,
-      metadata: { product_id: 'blog_article_package', product_name: 'Blog Article Package' },
+      metadata: { 
+        product_id: 'blog_article_package', 
+        product_name: 'Blog Article Package' 
+      },
     });
 
     return { statusCode: 200, headers, body: JSON.stringify({ id: session.id }) };
