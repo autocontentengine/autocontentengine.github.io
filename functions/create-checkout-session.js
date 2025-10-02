@@ -20,29 +20,40 @@ exports.handler = async (event) => {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: 'Blog Article Package',
-            description: 'Professional blog article with social media posts',
+      line_items: [
+        {
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: 'Blog Article Package',
+              description: 'Professional blog article with social media posts',
+            },
+            unit_amount: 2900,
           },
-          unit_amount: 2900,
+          quantity: 1,
         },
-        quantity: 1,
-      }],
+      ],
       mode: 'payment',
       success_url: 'https://autocontentengine.netlify.app/success.html',
       cancel_url: 'https://autocontentengine.netlify.app/',
       customer_email: email,
-      metadata: { 
-        product_id: 'blog_article_package', 
-        product_name: 'Blog Article Package' 
+      metadata: {
+        product_id: 'blog_article_package',
+        product_name: 'Blog Article Package',
       },
     });
 
-    return { statusCode: 200, headers, body: JSON.stringify({ id: session.id }) };
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ id: session.id })
+    };
   } catch (error) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
+    console.error('Error creating checkout session:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Internal server error' })
+    };
   }
 };
