@@ -183,7 +183,8 @@
             try {
                 const formData = new FormData(this);
                 
-                const response = await fetch('/.netlify/functions/create-checkout-with-metadata', {
+                // ✅ URL CORRETTO
+                const response = await fetch('/api/create-checkout-with-metadata', {
                     method: 'POST',
                     body: new URLSearchParams(formData)
                 });
