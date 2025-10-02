@@ -16,16 +16,17 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Parse form data from application/x-www-form-urlencoded
+    // Parse form data from URL encoded format
     const params = new URLSearchParams(event.body);
-    const business_name = params.get('business_name');
-    const content_topics = params.get('content_topics');
+    
+    const business_name = params.get('business_name') || 'Test Business';
+    const content_topics = params.get('content_topics') || 'AI, Marketing';
     const website_url = params.get('website_url') || '';
     const social_media = params.get('social_media') || '';
     const email = params.get('email');
     const product_name = params.get('product_name') || 'AI Content Package';
 
-    console.log('Creating checkout session with metadata:', {
+    console.log('Form data received:', {
       business_name,
       content_topics,
       website_url,
@@ -42,7 +43,7 @@ exports.handler = async (event) => {
             currency: 'eur',
             product_data: {
               name: product_name,
-              description: 'AI-Generated Content Package - 10 Instagram Captions + 5 Reel Concepts',
+              description: `AI Content for ${business_name} - ${content_topics}`,
             },
             unit_amount: 2900,
           },
@@ -63,7 +64,7 @@ exports.handler = async (event) => {
       },
     });
 
-    console.log('Stripe session created:', session.id);
+    console.log('Stripe session created with metadata:', session.metadata);
 
     return {
       statusCode: 200,
