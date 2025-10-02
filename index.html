@@ -242,7 +242,7 @@
             loadingElement.style.display = 'block';
 
             try {
-                const response = await fetch('/create-checkout-session', {
+                const response = await fetch('/.netlify/functions/create-checkout-session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -251,6 +251,10 @@
                         email: email
                     }),
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const session = await response.json();
 
@@ -263,7 +267,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred. Please try again.');
+                alert('An error occurred. Please try again. Error: ' + error.message);
             } finally {
                 checkoutButton.disabled = false;
                 checkoutButton.textContent = 'Get Your Content Now';
