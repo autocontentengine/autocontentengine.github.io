@@ -66,7 +66,7 @@ exports.handler = async (event) => {
     console.log('Stripe session created:', session.id);
 
     return {
-      statusCode: 200, // CAMBIATO DA 303 A 200
+      statusCode: 200,
       headers,
       body: JSON.stringify({ 
         sessionId: session.id,
