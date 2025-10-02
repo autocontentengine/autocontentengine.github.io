@@ -1,47 +1,282 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoContentEngine - AI Content Automation</title>
+    <title>AutoContentEngine - Professional Content Creation</title>
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
+
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.1);
-            padding: 40px;
-            border-radius: 10px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
         }
-        h1 {
-            font-size: 3em;
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .product-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .product-description {
+            color: #6c757d;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .price {
+            font-size: 2em;
+            color: #27ae60;
+            font-weight: bold;
             margin-bottom: 20px;
         }
-        .cta-button {
-            display: inline-block;
-            background: #ff6b6b;
+
+        .features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .features li {
+            padding: 8px 0;
+            color: #495057;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .buy-button {
+            width: 100%;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
             color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.2em;
-            margin: 20px 0;
+            border: none;
+            padding: 16px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .buy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .buy-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .email-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: #3498db;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>AutoContentEngine</h1>
-        <p>AI-Powered Content. Fully Automated.</p>
-        <p>Get weekly SEO-friendly content without lifting a finger.</p>
-        <a href="https://buy.stripe.com/test_eVq6oA3gO6mA6317tE77O00" class="cta-button">Start Free Trial - $29/month</a>
-        <p><small>No credit card required • Cancel anytime</small></p>
+        <div class="header">
+            <div class="logo">AutoContentEngine</div>
+            <div class="tagline">AI-Powered Content Creation</div>
+        </div>
+        
+        <div class="content">
+            <div class="product-card">
+                <div class="product-title">Blog Article Package</div>
+                <div class="product-description">
+                    Professional blog article complete with social media posts, optimized for SEO and engagement.
+                </div>
+                <ul class="features">
+                    <li>500-800 word SEO-optimized article</li>
+                    <li>4 social media posts (all platforms)</li>
+                    <li>Keyword research included</li>
+                    <li>48-hour delivery</li>
+                    <li>Unlimited revisions</li>
+                </ul>
+                <div class="price">€29.00</div>
+                
+                <input type="email" class="email-input" id="emailInput" placeholder="Enter your email address" required>
+                
+                <button class="buy-button" id="checkout-button">
+                    Get Your Content Now
+                </button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Preparing your checkout...</p>
+        </div>
+        
+        <div class="footer">
+            Secure payment powered by Stripe • 30-day money back guarantee
+        </div>
     </div>
+
+    <script>
+        const stripe = Stripe('pk_test_51SCoFP2fpPwK5R6HJXhu32KVhAMYCIm9QlP7iJCQ6s0Wbq2XxSxjxZOT3DZFZW6GY4Vi1f8OHwX5wdQlWITQAxzt00wlwo9KYl');
+        const checkoutButton = document.getElementById('checkout-button');
+        const loadingElement = document.getElementById('loading');
+        const emailInput = document.getElementById('emailInput');
+
+        checkoutButton.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            checkoutButton.disabled = true;
+            checkoutButton.textContent = 'Processing...';
+            loadingElement.style.display = 'block';
+
+            try {
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email
+                    }),
+                });
+
+                const session = await response.json();
+
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id,
+                });
+
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                checkoutButton.disabled = false;
+                checkoutButton.textContent = 'Get Your Content Now';
+                loadingElement.style.display = 'none';
+            }
+        });
+
+        // Enter key support
+        emailInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkoutButton.click();
+            }
+        });
+    </script>
 </body>
 </html>
