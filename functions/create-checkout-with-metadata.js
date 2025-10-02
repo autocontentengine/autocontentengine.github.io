@@ -66,12 +66,12 @@ exports.handler = async (event) => {
     console.log('Stripe session created:', session.id);
 
     return {
-      statusCode: 303, // Redirect
-      headers: {
-        ...headers,
-        'Location': session.url
-      },
-      body: ''
+      statusCode: 200, // CAMBIATO DA 303 A 200
+      headers,
+      body: JSON.stringify({ 
+        sessionId: session.id,
+        url: session.url 
+      })
     };
   } catch (error) {
     console.error('Error creating checkout session:', error);
