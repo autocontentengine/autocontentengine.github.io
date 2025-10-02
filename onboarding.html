@@ -92,11 +92,24 @@
             transform: translateY(-2px);
         }
         
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .note {
             text-align: center;
             margin-top: 20px;
             color: #666;
             font-size: 14px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            color: #667eea;
         }
     </style>
 </head>
@@ -107,7 +120,7 @@
             <p>Tell us about your business to generate personalized content</p>
         </div>
         
-        <form name="onboarding" action="/.netlify/functions/create-checkout-with-metadata" method="POST">
+        <form id="onboarding-form">
             <input type="hidden" name="form-name" value="onboarding">
             
             <div class="form-group">
@@ -142,14 +155,59 @@
             
             <input type="hidden" name="product_name" value="AI Content Package">
             
-            <button type="submit" class="submit-btn">
+            <button type="submit" class="submit-btn" id="submit-btn">
                 Generate My Content Strategy - €29
             </button>
+            
+            <div class="loading" id="loading">
+                Redirecting to secure payment...
+            </div>
             
             <div class="note">
                 You'll be redirected to secure Stripe payment
             </div>
         </form>
     </div>
+
+    <script>
+        document.getElementById('onboarding-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const loading = document.getElementById('loading');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            loading.style.display = 'block';
+            
+            try {
+                const formData = new FormData(this);
+                
+                const response = await fetch('/.netlify/functions/create-checkout-with-metadata', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    throw new Error('No redirect URL received');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Generate My Content Strategy - €29';
+                loading.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
