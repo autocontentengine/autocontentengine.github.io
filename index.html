@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoContentEngine - Professional Content Creation</title>
-    <script src="https://js.stripe.com/v3/"></script>
     <style>
         * {
             margin: 0;
@@ -127,54 +126,12 @@
             box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
         }
 
-        .buy-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .footer {
             text-align: center;
             padding: 20px;
             color: #6c757d;
             font-size: 0.9em;
             border-top: 1px solid #e9ecef;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 2s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .email-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1em;
-            margin-bottom: 20px;
-            transition: border-color 0.3s ease;
-        }
-
-        .email-input:focus {
-            outline: none;
-            border-color: #3498db;
         }
     </style>
 </head>
@@ -187,100 +144,28 @@
         
         <div class="content">
             <div class="product-card">
-                <div class="product-title">Blog Article Package</div>
+                <div class="product-title">AI Content Package</div>
                 <div class="product-description">
-                    Professional blog article complete with social media posts, optimized for SEO and engagement.
+                    Complete AI-generated content strategy with ready-to-post social media content.
                 </div>
                 <ul class="features">
-                    <li>500-800 word SEO-optimized article</li>
-                    <li>4 social media posts (all platforms)</li>
-                    <li>Keyword research included</li>
-                    <li>48-hour delivery</li>
-                    <li>Unlimited revisions</li>
+                    <li>10 Ready-to-Post Instagram Captions</li>
+                    <li>5 Viral Reel Concepts with Scripts</li>
+                    <li>Complete Content Strategy Overview</li>
+                    <li>AI Image Prompts for Each Post</li>
+                    <li>Strategic Hashtag Bank</li>
                 </ul>
                 <div class="price">€29.00</div>
                 
-                <input type="email" class="email-input" id="emailInput" placeholder="Enter your email address" required>
-                
-                <button class="buy-button" id="checkout-button">
-                    Get Your Content Now
+                <button class="buy-button" onclick="window.location.href='/onboarding.html'">
+                    Get Started - Tell Us About Your Business
                 </button>
             </div>
-        </div>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Preparing your checkout...</p>
         </div>
         
         <div class="footer">
             Secure payment powered by Stripe • 30-day money back guarantee
         </div>
     </div>
-
-    <script>
-        const stripe = Stripe('pk_test_51SCoFP2fpPwK5R6HJXhu32KVhAMYCIm9QlP7iJCQ6s0Wbq2XxSxjxZOT3DZFZW6GY4Vi1f8OHwX5wdQlWITQAxzt00wlwo9KYl');
-        const checkoutButton = document.getElementById('checkout-button');
-        const loadingElement = document.getElementById('loading');
-        const emailInput = document.getElementById('emailInput');
-
-        checkoutButton.addEventListener('click', async () => {
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                alert('Please enter your email address');
-                return;
-            }
-
-            if (!email.includes('@')) {
-                alert('Please enter a valid email address');
-                return;
-            }
-
-            checkoutButton.disabled = true;
-            checkoutButton.textContent = 'Processing...';
-            loadingElement.style.display = 'block';
-
-            try {
-                const response = await fetch('/.netlify/functions/create-checkout-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const session = await response.json();
-
-                const result = await stripe.redirectToCheckout({
-                    sessionId: session.id,
-                });
-
-                if (result.error) {
-                    alert(result.error.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again. Error: ' + error.message);
-            } finally {
-                checkoutButton.disabled = false;
-                checkoutButton.textContent = 'Get Your Content Now';
-                loadingElement.style.display = 'none';
-            }
-        });
-
-        // Enter key support
-        emailInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkoutButton.click();
-            }
-        });
-    </script>
 </body>
 </html>
