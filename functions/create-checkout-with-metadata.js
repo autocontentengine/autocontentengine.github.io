@@ -16,7 +16,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Parse form data from URL encoded format
+    // Parse form data
     const params = new URLSearchParams(event.body);
     
     const business_name = params.get('business_name') || 'Test Business';
@@ -26,15 +26,14 @@ exports.handler = async (event) => {
     const email = params.get('email');
     const product_name = params.get('product_name') || 'AI Content Package';
 
-    console.log('Form data received:', {
-      business_name,
-      content_topics,
-      website_url,
-      social_media,
-      email,
-      product_name
-    });
+    console.log('=== DEBUG FORM DATA ===');
+    console.log('Business Name:', business_name);
+    console.log('Content Topics:', content_topics);
+    console.log('Email:', email);
+    console.log('Website:', website_url);
+    console.log('Social Media:', social_media);
 
+    // Create Stripe session with EXTENDED metadata
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -60,11 +59,26 @@ exports.handler = async (event) => {
         website_url: website_url,
         social_media: social_media,
         product_name: product_name,
-        product_id: 'ai_content_package'
+        customer_email: email, // Aggiungi email ai metadata
+        timestamp: new Date().toISOString()
       },
+      payment_intent_data: {
+        metadata: {
+          business_name: business_name,
+          content_topics: content_topics,
+          website_url: website_url,
+          social_media: social_media,
+          product_name: product_name,
+          customer_email: email,
+          source: 'autocontentengine'
+        }
+      }
     });
 
-    console.log('Stripe session created with metadata:', session.metadata);
+    console.log('=== DEBUG STRIPE SESSION ===');
+    console.log('Session ID:', session.id);
+    console.log('Session Metadata:', session.metadata);
+    console.log('Payment Intent:', session.payment_intent);
 
     return {
       statusCode: 200,
@@ -75,7 +89,8 @@ exports.handler = async (event) => {
       })
     };
   } catch (error) {
-    console.error('Error creating checkout session:', error);
+    console.error('=== DEBUG ERROR ===');
+    console.error('Error:', error);
     return {
       statusCode: 500,
       headers,
